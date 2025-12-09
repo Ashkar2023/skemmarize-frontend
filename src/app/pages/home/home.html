@@ -1,0 +1,86 @@
+<div class="min-h-screen max-h-screen w-full flex">
+    <!-- <app-navbar></app-navbar> -->
+
+    <!-- Sidebar -->
+    <div class="w-[20%] bg-gray-800 p-4 flex flex-col space-y-2">
+        <div class="text-white space-y-1">
+            <h2 class="text-2xl text-blue-100 font-bold">Skemmarize</h2>
+            <!-- <div class="text-gray-400 text-xs mb-2">Total Summaries: {{ messages().length / 2 }}</div> -->
+        </div>
+
+        <p class="text-sm text-gray-400 ">Chat history</p>
+        <div class="overflow-y-scroll flex-1 space-y-2 px-1">
+
+            @if (historyLoading()) {
+            <div class="flex items-center justify-center py-8">
+                <i class="pi pi-spin pi-spinner text-blue-400 text-2xl"></i>
+            </div>
+            } @else if (chatHistory().length === 0) {
+            <div class="text-center py-8 text-gray-400">
+                <i class="pi pi-images text-4xl mb-2 block"></i>
+                <p class="text-sm">No chat history yet</p>
+                <p class="text-xs mt-1">Start by uploading an image</p>
+            </div>
+            } @else {
+            @for (item of chatHistory(); track item.id) {
+            <div (click)="onChatClick(item)" class="bg-gray-900 rounded-lg p-2 hover:bg-gray-700 transition-colors cursor-pointer">
+                <img [src]="item.imageUrl" [alt]="'Chat ' + item.id" class="w-full h-20 object-cover rounded-md mb-2" />
+                <p class="text-white text-xs line-clamp-2 mb-1">{{ item.response }}</p>
+                <p class="text-gray-500 text-xs">{{ item.createdAt | date:'short' }}</p>
+            </div>
+            }
+            }
+        </div>
+
+        <div class="grid grid-cols-12 gap-3 bg-gray-900 p-2 rounded-lg pe-4 items-center">
+            <div class="col-span-2 flex items-center justify-center">
+                <img [src]="currentUser.avatarUrl" class="max-h-10 rounded-full self-center" alt="">
+            </div>
+            <div class="col-span-8 flex flex-col items-start min-w-0 overflow-hidden ">
+                <h3 class="truncate">{{ currentUser.username ?? "Guest" }}</h3>
+                <p class="text-gray-500 text-sm text-ellipsis">{{ currentUser.email }}</p>
+            </div>
+            <div class="col-span-2 flex items-center justify-end">
+                <button class="text-red-500" (click)="onLogout()">
+                    <i class="pi pi-sign-out" pButtonIcon></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="w-[80%] bg-slate-900 flex flex-col p-6">
+        <!-- Chat Display Area -->
+        <div class="flex-1 bg-gray-800 rounded-lg overflow-y-scroll mb-4">
+            <chat-display [messages]="messages()"></chat-display>
+        </div>
+
+        <!-- Image Preview (if selected) -->
+        @if (currentImage()) {
+        <div class="mb-4 bg-gray-800 rounded-lg p-4">
+            <div class="flex items-center gap-4">
+                <img [src]="currentImage()!.dataUrl" alt="Selected image" class="w-20 h-20 object-cover rounded-lg">
+                <div class="text-white flex-1">
+                    <p class="text-sm font-semibold">{{ currentImage()!.file.name }}</p>
+                    <p class="text-xs text-gray-400">{{ (currentImage()!.file.size / 1024).toFixed(2) }} KB</p>
+                </div>
+                <button class="text-gray-400 hover:text-white" (click)="currentImage.set(null)">
+                    <i class="pi pi-times"></i>
+                </button>
+            </div>
+        </div>
+        }
+
+        <!-- Input Area -->
+        <div class="bg-gray-800 rounded-lg p-4 flex items-center gap-4">
+            <div class="flex-1">
+                <image-picker (imageSelected)="onImageSelected($event)"></image-picker>
+            </div>
+
+            <div>
+                <summarize-button [disabled]="!currentImage()" [loading]="isLoading()" (summarize)="onSummarize()">
+                </summarize-button>
+            </div>
+        </div>
+    </div>
+</div>

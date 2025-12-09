@@ -1,11 +1,23 @@
 import { type ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { routes } from './app.routes';
+import { providePrimeNG } from 'primeng/config';
+import Aura from "@primeng/themes/aura"
+import { authInterceptor } from './interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
     providers: [
         provideBrowserGlobalErrorListeners(),
-        provideRouter(routes)
+        provideRouter(routes),
+        provideHttpClient(
+            withInterceptors([authInterceptor])
+        ),
+        providePrimeNG({
+            theme:{
+                preset: Aura
+            }
+        })
     ]
 };

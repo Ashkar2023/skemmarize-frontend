@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'app-login',
@@ -9,11 +10,10 @@ import { CommonModule } from '@angular/common';
     styleUrl: './login.css'
 })
 export class LoginPage {
-    onSignup() {
-        let redirect_uri = encodeURIComponent("http://localhost:4200/oauth/callback");
-        let scopes = encodeURIComponent("read:user user:email");
-        let client_id = "Ov23liYz1WyBW3i4SthW";
+    
+    constructor() { }
 
-        window.location.href = `https://github.com/login/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scopes}&state=SOME_RANDOM_STRING`;
+    onSignup() {
+        window.location.href = `${environment.backendBaseUrl}/oauth2/authorization/github`;
     }
 }

@@ -1,0 +1,52 @@
+<div class="w-full h-full overflow-y-auto p-4 space-y-4">
+    @for (message of messages; track message.timestamp) {
+    <div [class]="message.type === 'user' ? 'flex justify-end' : 'flex justify-start'">
+        <div [class]="message.type === 'user' 
+                ? 'max-w-[70%] bg-blue-600 text-white rounded-lg p-4 shadow-lg' 
+                : message.isError 
+                    ? 'max-w-[70%] bg-red-600 text-white rounded-lg p-4 shadow-lg border-2 border-red-400'
+                    : 'max-w-[70%] bg-gray-700 text-white rounded-lg p-4 shadow-lg'">
+
+            <!-- User message with image -->
+            @if (message.type === 'user' && message.imageUrl) {
+            <div class="space-y-2">
+                <img [src]="message.imageUrl" alt="Uploaded image"
+                    class="max-w-full rounded-lg mb-2 max-h-64 object-contain">
+                <p class="text-sm">{{ message.content }}</p>
+            </div>
+            }
+
+            <!-- AI response -->
+            @if (message.type === 'ai') {
+            <div class="space-y-2">
+                <div class="flex items-center gap-2 mb-2">
+                    @if (message.isError) {
+                    <i class="pi pi-exclamation-circle text-red-200"></i>
+                    <span class="font-semibold text-sm">Error</span>
+                    } @else {
+                    <i class="pi pi-sparkles text-yellow-400"></i>
+                    <span class="font-semibold text-sm">AI Summary</span>
+                    }
+                </div>
+                <p class="whitespace-pre-wrap">{{ message.content }}</p>
+            </div>
+            }
+
+            <!-- Timestamp -->
+            <div [class]="message.type === 'user' ? 'text-xs text-blue-200 mt-2' : 'text-xs text-gray-400 mt-2'">
+                {{ message.timestamp | date:'short' }}
+            </div>
+        </div>
+    </div>
+    }
+    <div #scrollAnchor></div>
+
+    <!-- Empty state -->
+    @if (messages.length === 0) {
+    <div class="flex flex-col items-center justify-center text-gray-400">
+        <i class="pi pi-image text-6xl mb-4"></i>
+        <p class="text-lg">Upload an image to get started</p>
+        <p class="text-sm">Your conversation will appear here</p>
+    </div>
+    }
+</div>

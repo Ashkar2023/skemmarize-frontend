@@ -1,0 +1,52 @@
+<div class="min-h-screen w-full bg-slate-900 flex items-center justify-center p-6">
+    <div class="max-w-4xl w-full bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
+        @if (loading()) {
+        <div class="flex items-center justify-center py-20">
+            <i class="pi pi-spin pi-spinner text-blue-400 text-4xl"></i>
+        </div>
+        } @else if (chatItem()) {
+        <!-- Header with back button -->
+        <div class="bg-gray-900 p-4 flex items-center justify-between border-b border-gray-700">
+            <button 
+                (click)="goBack()" 
+                class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                <i class="pi pi-arrow-left"></i>
+                <span>Back to Home</span>
+            </button>
+            <p class="text-gray-400 text-sm">{{ chatItem()!.createdAt | date:'medium' }}</p>
+        </div>
+
+        <!-- Content -->
+        <div class="p-8 space-y-6">
+            <!-- Image Section -->
+            <div class="flex justify-center">
+                <img 
+                    [src]="chatItem()!.imageUrl" 
+                    [alt]="'Chat ' + chatItem()!.id" 
+                    class="max-w-full max-h-96 rounded-lg shadow-lg object-contain"
+                    (error)="$event.target.src='https://via.placeholder.com/400?text=Image+Not+Found'" />
+            </div>
+
+            <!-- Summary Section -->
+            <div class="bg-gray-900 rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-blue-400 mb-4 flex items-center gap-2">
+                    <i class="pi pi-file-edit"></i>
+                    <span>Summary</span>
+                </h2>
+                <p class="text-gray-200 leading-relaxed whitespace-pre-wrap">{{ chatItem()!.response }}</p>
+            </div>
+        </div>
+        } @else {
+        <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+            <i class="pi pi-exclamation-circle text-5xl mb-4"></i>
+            <p class="text-xl">Chat not found</p>
+            <button 
+                (click)="goBack()" 
+                class="mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                Go Back to Home
+            </button>
+        </div>
+        }
+    </div>
+</div>
+
