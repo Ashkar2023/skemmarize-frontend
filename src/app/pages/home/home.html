@@ -24,7 +24,7 @@
             } @else {
             @for (item of chatHistory(); track item.id) {
             <div (click)="onChatClick(item)" class="bg-gray-900 rounded-lg p-2 hover:bg-gray-700 transition-colors cursor-pointer">
-                <img [src]="item.imageUrl" [alt]="'Chat ' + item.id" class="w-full h-20 object-cover rounded-md mb-2" />
+                <img [src]="getImageUrl(item.imageUrl)" [alt]="'Chat ' + item.id" class="w-full h-20 object-cover rounded-md mb-2" />
                 <p class="text-white text-xs line-clamp-2 mb-1">{{ item.response }}</p>
                 <p class="text-gray-500 text-xs">{{ item.createdAt | date:'short' }}</p>
             </div>
@@ -34,7 +34,7 @@
 
         <div class="grid grid-cols-12 gap-3 bg-gray-900 p-2 rounded-lg pe-4 items-center">
             <div class="col-span-2 flex items-center justify-center">
-                <img [src]="currentUser.avatarUrl" class="max-h-10 rounded-full self-center" alt="">
+                <img [src]="getImageUrl(currentUser.avatarUrl!)" class="max-h-10 rounded-full self-center" alt="">
             </div>
             <div class="col-span-8 flex flex-col items-start min-w-0 overflow-hidden ">
                 <h3 class="truncate">{{ currentUser.username ?? "Guest" }}</h3>

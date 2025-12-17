@@ -15,7 +15,6 @@ import { environment } from '../../../environments/environment';
     selector: 'app-home',
     imports: [
         CommonModule,
-        NavbarComponent,
         ImagePicker,
         SummarizeButton,
         ChatDisplay,
@@ -28,7 +27,7 @@ export class Home implements OnInit {
     currentImage = signal<ImageData | null>(null);
     messages = signal<ChatMessage[]>([]);
     isLoading = signal<boolean>(false);
-    
+
     // Chat history state
     chatHistory = signal<ChatHistoryItem[]>([]);
     historyLoading = signal<boolean>(false);
@@ -61,17 +60,17 @@ export class Home implements OnInit {
     ngOnInit(): void {
         // Log user data for debugging
         console.log('Current user in Home:', this.currentUser);
-        
+
         // Load chat history
         this.loadChatHistory();
     }
-    
+
     /**
      * Load chat history from the server
      */
     loadChatHistory(): void {
         this.historyLoading.set(true);
-        
+
         this.summarizationService.getHistory().subscribe({
             next: (history) => {
                 this.chatHistory.set(history);
@@ -83,6 +82,10 @@ export class Home implements OnInit {
                 this.historyLoading.set(false);
             }
         });
+    }
+
+    getImageUrl(imageUrl: string): string {
+        return new URL(imageUrl, environment.backendBaseUrl).href;
     }
 
     onImageSelected(imageData: ImageData): void {
@@ -121,7 +124,7 @@ export class Home implements OnInit {
 
                 this.messages.update(msgs => [...msgs, aiMessage]);
                 this.isLoading.set(false);
-                
+
                 // Add new item to the front of chat history (since we're ordering by desc)
                 // Use the base64 data URL directly instead of backend's imageUrl
                 const newHistoryItem: ChatHistoryItem = {
